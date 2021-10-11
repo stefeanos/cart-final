@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>cart</title>
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="model.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script>
+     // model
+
+// view
+view();
+
+function view() {
+    let html = '<h1>Products</h1> ';
+    for (let i = 0; i < model.product.length; i++) {
+
+        html += `
+            <section class="grid">
+                <!-- Products -->
+                <div class="product">
+                    <div class="product__info">
+                        <h2 class="product__name">${model.product[i].name}</h2>
+                        <img class="product__image" src="images/${model.product[i].img}">
+                        <span <h3 class="product__desc">${model.product[i].desc}</h3></span>
+                        <span class="product__price highlight">${model.product[i].price} kr</span>
+                        
+                        <button onclick="addsomethingToCart(${i})" class="action action--button
+                        action--buy"><i class="fa fa-shopping-cart"></i>
+                            <span class="action__text">Legg til produkt i handlekurv</span></button>
+                            
+                    </div>
+                </div>
+            </section>
+            `;
+    }
+
+    html += '<h1>Cart</h1>';
+    for (let i = 0; i < model.cart.length; i++) {
+        html += `
+         <section class="grid">
+             <!-- Products -->
+             <div class="product">
+                 <div class="product__info">
+                     <h2 class="product__name">${model.cart[i].name}</h2>
+                     <img class="product__image" src="images/${model.cart[i].img}">
+                     <span class="product__price highlight">${model.cart[i].price}</span>
+                     Antall: ${model.cart[i].quantity}
+                     <button class="btn1" onclick="">Antall</button>
+                     <input oninput="model.cart[${i}].quantity = this.value" type="number" value="1"
+                     value="model.cart[${i}].quantity">
+                     <button class="btn1" onclick="view()"> + ${model.cart[i].quantity}</button>
+                     <button class="btn2" onclick="remove(${i})">Fjern Fra Handlekurv &times;</button>
+                   
+                    
+                 </div>
+             </div>
+             <li>
+                  <span>
+              ${model.cart[i].name} ${model.cart[i].price} each 
+              x ${model.cart[i].quantity} = ${(model.cart[i].quantity * model.cart[i].price).toFixed(2)}
+                
+            </span>
+            <span>
+            </span>
+          </li>
+             `;
+    }
+
+
+
+    html += cartFooter();
+    document.getElementById('app').innerHTML = html;
+}
+// controller
+
+//--------------------------------------------------------------
+
+// addToCart
+function addsomethingToCart(index) {
+    for (let i = 0; i < model.cart.length; i += 1) {
+        if (model.cart[i].name === name) {
+            model.cart[i].quantity += 1;
+            view();
+            return true;
+        }
+    }
+
+    model.cart.push({
+        name: model.product[i].name,
+        price: model.product[i].price,
+        img: model.product[i].img,
+        desc: model.product[i].desc,
+        quantity: 1,
+    });
+    view();
+}
+
+//--------------------------------------------------------------
+
+
+// quantity is
+function getQuantity() {
+    let quantity = 0;
+    for (let i = 0; i < model.cart.length; i += 1) {
+        quantity += model.cart[i].quantity;
+    }
+    return quantity;
+}
+
+
+//--------------------------------------------------------------
+//getTotal() 
+function getTotal() {
+    let total = 0;
+    for (let i = 0; i < model.cart.length; i += 1) {
+        total += model.cart[i].price * model.cart[i].quantity;
+    }
+    return (total.innerHTML = `Total ${total.toFixed(2)} Kr`);
+}
+
+for (var i = 0; i < model.cart.length; i++)
+    model.cart[i].quantity.onclick = function () {
+        return false;
+    };
+//--------------------------------------------------------------
+//emptyCart 
+function empty() {
+    model.cart.length = 0;
+    view();
+}
+
+
+//--------------------------------------------------------------
+//remove on by one() 
+function remove(index) {
+    for (let i in model.cart) {
+        if (model.cart[i].name === index);
+        model.cart[i].quantity--;
+        if (model.cart[i].quantity === 0);
+        model.cart.splice(index, 1);
+    }
+
+    view();
+}
+//--------------------------------------------------------------
+//cartFooter 
+function cartFooter() {
+    let html = `
+      <div class="cart-footer">
+          <button class="btn" onclick="empty()"> Clear Cart </button>
+          <button class="btn" >${getTotal()}</button>
+      </div>
+
+      `;
+    return html;
+}
+    </script>
+  </body>
+</html>
+
